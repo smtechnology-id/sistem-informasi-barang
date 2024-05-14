@@ -10,10 +10,13 @@ if(isset($_POST['login'])){
     //cocokin database
     $cekdatabase = mysqli_query($conn, "SELECT * FROM login where email='$email' and password='$password'");
     //hitung data
+    $fetch = mysqli_fetch_array($cekdatabase);
     $hitung = mysqli_num_rows($cekdatabase);
 
     if($hitung>0){
         $_SESSION['log'] = 'True'; 
+        $_SESSION['email'] = $fetch['email']; 
+        $_SESSION['level'] = $fetch['level']; 
         header('location:index.php');
     } else  {
         header('location:login.php');
