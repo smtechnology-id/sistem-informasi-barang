@@ -11,7 +11,7 @@ require 'function.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>INVENTARIS RUANGAN</title>
+    <title>DATA USER</title>
     <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
@@ -58,7 +58,7 @@ require 'function.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid">
-                    <h1 class="mt-4">INVENTARIS RUANGAN</h1>
+                    <h1 class="mt-4">INVENTARIS BARANG</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">SISTEM INFORMASI INVENTARISASI BMD</li>
                     </ol>
@@ -76,22 +76,78 @@ require 'function.php';
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Barang</th>
-                                            <th>Kode Barang</th>
-                                            <th>Jumlah</th>
-                                            <th>Ruangan</th>
-                                            <th>Penanggung Jawab</th>
+                                            <th>Nama User</th>
+                                            <th>level</th>
+                                            <th>Email</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                        </tr>
+
+                                        <?php
+                                        $ambilsemuadatabarang = mysqli_query($conn, "select * from login");
+                                        $i = 1;
+                                        while ($data = mysqli_fetch_array($ambilsemuadatabarang)) {
+                                            $nama = $data['nama'];
+                                            $level = $data['level'];
+                                            $email = $data['email'];
+                                            $id = $data['id_user'];
+
+
+                                        ?>
+                                            <tr>
+                                                <td><?= $i++; ?></td>
+                                                <td><?= $nama; ?></td>
+                                                <td><?= $level; ?></td>
+                                                <td><?= $email; ?></td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit<?= $id; ?>">
+                                                        Edit
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete<?= $id; ?>">
+                                                        Delete
+                                                    </button>
+                                                    <div class="modal fade" id="edit<?= $id; ?>">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+
+                                                                <!-- Modal body -->
+                                                                <form method="post">
+                                                                    <div class="modal-body">
+                                                                        <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control" required value="<?= $nama ?>">
+                                                                        <input type="hidden" name="id_user" placeholder="Nama Lengkap" class="form-control" required value="<?= $id ?>">
+                                                                        <br>
+                                                                        <input type="text" name="email" placeholder="Email" class="form-control" required value="<?= $email ?>">
+                                                                        <br>
+                                                                        <input type="password" name="password" placeholder="password" class="form-control">
+                                                                        <br>
+                                                                        <button type="submit" class="btn btn-primary" name="updateUser">Submit</button>
+                                                                    </div>
+                                                                </form>
+
+                                                                <!-- Modal body -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade" id="delete<?= $id; ?>">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content p-5">
+                                                                <!-- Modal body -->
+                                                                <p>Anda Yakin Ingin Menghapus Data Ini ? </p>
+                                                                <form method="post">
+                                                                    <input type="hidden" name="id_user" value="<?= $id; ?>">
+                                                                    <button type="submit" class="btn btn-danger" name="deleteUser">Delete</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        };
+
+                                        ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -137,19 +193,15 @@ require 'function.php';
             <!-- Modal body -->
             <form method="post">
                 <div class="modal-body">
-                    <input type="text" name="namabarang" placeholder="Nama Barang" class="form-control" required>
+                    <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control" required>
                     <br>
-                    <input type="text" name="kodebarang" placeholder="Kode Barang" class="form-control" required>
+                    <input type="text" name="email" placeholder="Email" class="form-control" required>
                     <br>
-                    <input type="text" name="jumlah" placeholder="Jumlah" class="form-control" required>
+                    <input type="password" name="password" placeholder="password" class="form-control" required>
                     <br>
-                    <input type="text" name="ruangan" placeholder="Ruangan" class="form-control" required>
-                    <br>
-                    <input type="text" name="penanggungjawab" placeholder="Penanggung Jawab" class="form-control" required>
-                    <br>
-                    <button type="submit" class="btn btn-primary" name="addnewdata">Submit</button>
+                    <button type="submit" class="btn btn-primary" name="addUser">Submit</button>
                 </div>
-                <form>
+            </form>
 
         </div>
     </div>

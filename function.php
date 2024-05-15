@@ -310,3 +310,64 @@ if (isset($_POST['deleteFurniture'])) {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 }
+if (isset($_POST['addUser'])) {
+    // Ambil data dari form
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+
+    // Query untuk menyimpan data
+    $sql = "INSERT INTO login (nama, email, password, level) VALUES ('$nama', '$email', '$password', 'admin')";
+
+    // Eksekusi query
+    if (mysqli_query($conn, $sql)) {
+        echo "Data berhasil disimpan!";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+}
+if (isset($_POST['updateUser'])) {
+    // Ambil data dari form
+    $id_user = mysqli_real_escape_string($conn, $_POST['id_user']);
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+
+    // Bangun query update secara dinamis
+    $update_fields = [];
+    $update_fields[] = "nama = '$nama'";
+    $update_fields[] = "email = '$email'";
+
+    if (!empty($password)) {
+        // Hash password sebelum menyimpan ke database
+        $hashed_password = $password;
+        $update_fields[] = "password = '$hashed_password'";
+    }
+
+    // Gabungkan semua field yang akan diupdate
+    $update_query = implode(", ", $update_fields);
+
+    // Query untuk memperbarui data
+    $sql = "UPDATE login SET $update_query WHERE id_user = '$id_user'";
+
+    // Eksekusi query
+    if (mysqli_query($conn, $sql)) {
+        echo "Data berhasil diperbarui!";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+}
+if (isset($_POST['deleteUser'])) {
+    // Ambil idbarang dari form
+    $id_user = mysqli_real_escape_string($conn, $_POST['id_user']);
+
+    // Query untuk menghapus data
+    $sql = "DELETE FROM login WHERE id_user = '$id_user'";
+
+    // Eksekusi query
+    if (mysqli_query($conn, $sql)) {
+        echo "Data berhasil dihapus!";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+}
