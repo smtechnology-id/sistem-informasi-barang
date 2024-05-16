@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Bulan Mei 2024 pada 12.54
+-- Waktu pembuatan: 16 Bulan Mei 2024 pada 11.37
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.1
 
@@ -47,7 +47,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`idbarang`, `kodebarang`, `namainvenbarang`, `nomorregister`, `kondisibarang`, `merkbarang`, `ukuranbarang`, `bahanbarang`, `tahunperolehanbarang`, `asalusulbarang`, `hargabarang`, `keteranganbarang`) VALUES
-(5, '012102', 'kamera', '231313', 'baru', 'canon', '14', 'plastik', '2025', 'baru', '-', '-'),
+(5, '012102', 'handphone', '231313', 'baru', 'canon', '14', 'plastik', '2025', 'baru', '-', '-'),
 (6, '012102', 'kamera', '-', 'bekas', '-', '-', '--', '-', '--', '-', '-'),
 (7, '012102', 'Kamera', '-', '-', '-', '-', '-', '-', '-', '-', '-');
 
@@ -150,27 +150,6 @@ INSERT INTO `kendaraan` (`idbarang`, `namakendaraan`, `merk1`, `bahan1`, `harga1
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `login`
---
-
-CREATE TABLE `login` (
-  `id_user` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `level` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `login`
---
-
-INSERT INTO `login` (`id_user`, `nama`, `level`, `email`, `password`) VALUES
-(1, 'Admin', 'admin', 'admin@gmail.com', 'xEYnws6y');
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `peralatan`
 --
 
@@ -203,6 +182,64 @@ INSERT INTO `peralatan` (`idbarang`, `namabarang`, `merk`, `bahan`, `harga`, `ta
 (10, 'Alat Pemotong Kertas', 'Joyko', 'Logam', '310.000', '2022', 'Pembelian', 'Baik', 'Faktur Pembelian', '-'),
 (11, 'Lambang Burung Garuda', '-', 'Logam', '2.197.700', '2023', 'Pembelian', 'Baik', 'Faktur Pembelian', '-');
 
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `ruangan`
+--
+
+CREATE TABLE `ruangan` (
+  `idbarang` int(11) NOT NULL,
+  `namaruangan` varchar(50) NOT NULL,
+  `koderuangan` varchar(25) NOT NULL,
+  `namabarangruangan` varchar(25) NOT NULL,
+  `spesifikasi` varchar(25) NOT NULL,
+  `aspeklegalruangan` varchar(25) NOT NULL,
+  `ukuranruangan` varchar(25) NOT NULL,
+  `bahanruangan` varchar(25) NOT NULL,
+  `tahunperolehanruangan` varchar(25) NOT NULL,
+  `jumlahruangan` varchar(25) NOT NULL,
+  `hargaperolehanruangan` varchar(25) NOT NULL,
+  `kondisiruangan` varchar(25) NOT NULL,
+  `penggunabarang` varchar(25) NOT NULL,
+  `unitkerja` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `ruangan`
+--
+
+INSERT INTO `ruangan` (`idbarang`, `namaruangan`, `koderuangan`, `namabarangruangan`, `spesifikasi`, `aspeklegalruangan`, `ukuranruangan`, `bahanruangan`, `tahunperolehanruangan`, `jumlahruangan`, `hargaperolehanruangan`, `kondisiruangan`, `penggunabarang`, `unitkerja`) VALUES
+(1, '', '', '', '', '1', '', '', '', '', '', '', '', ''),
+(2, 'ksjdkajkd', 'dk', 'kdjk', '', 'kdjk', '', '', '', '', '', '', '', ''),
+(3, 'kajdkjskjdkjakdj', 'kjdksjkajskd', 'kdjaksjdkajsd', '', 'dkajkjkdsad', '', '', '', '', '', '', '', ''),
+(4, 'k', 'jkj', 'kjk', 'jk', 'kj', '', '', '', '', '', '', '', ''),
+(5, 'tes', 'test', '', 'test', 'etes', 'tes', 't', 'e', 's', 'tes', 'tes', 'tes', 'tes'),
+(6, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id_user` int(11) NOT NULL,
+  `nama_lengkap` varchar(255) NOT NULL,
+  `jabatan` varchar(255) NOT NULL,
+  `unit_kerja` varchar(255) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id_user`, `nama_lengkap`, `jabatan`, `unit_kerja`, `email`, `password`) VALUES
+(1, 'Administrator', 'Admin', 'Unit', 'admin@gmail.com', '123'),
+(2, 'admin 2', 'Admin', 'Admin', 'admin2@gmail.com', 'xEYnws6y');
+
 --
 -- Indexes for dumped tables
 --
@@ -232,16 +269,22 @@ ALTER TABLE `kendaraan`
   ADD PRIMARY KEY (`idbarang`);
 
 --
--- Indeks untuk tabel `login`
---
-ALTER TABLE `login`
-  ADD PRIMARY KEY (`id_user`);
-
---
 -- Indeks untuk tabel `peralatan`
 --
 ALTER TABLE `peralatan`
   ADD PRIMARY KEY (`idbarang`);
+
+--
+-- Indeks untuk tabel `ruangan`
+--
+ALTER TABLE `ruangan`
+  ADD PRIMARY KEY (`idbarang`);
+
+--
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id_user`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
@@ -272,16 +315,22 @@ ALTER TABLE `kendaraan`
   MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `login`
---
-ALTER TABLE `login`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT untuk tabel `peralatan`
 --
 ALTER TABLE `peralatan`
   MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT untuk tabel `ruangan`
+--
+ALTER TABLE `ruangan`
+  MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

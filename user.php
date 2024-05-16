@@ -77,7 +77,8 @@ require 'function.php';
                                         <tr>
                                             <th>No</th>
                                             <th>Nama User</th>
-                                            <th>level</th>
+                                            <th>Jabatan</th>
+                                            <th>Unit Kerja</th>
                                             <th>Email</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -85,20 +86,23 @@ require 'function.php';
                                     <tbody>
 
                                         <?php
-                                        $ambilsemuadatabarang = mysqli_query($conn, "select * from login");
+                                        $ambilsemuadatabarang = mysqli_query($conn, "select * from users");
                                         $i = 1;
                                         while ($data = mysqli_fetch_array($ambilsemuadatabarang)) {
-                                            $nama = $data['nama'];
-                                            $level = $data['level'];
+                                            $nama_lengkap = $data['nama_lengkap'];
+                                            $jabatan = $data['jabatan'];
+                                            $unit_kerja = $data['unit_kerja'];
                                             $email = $data['email'];
+                                            $password = $data['password'];
                                             $id = $data['id_user'];
 
 
                                         ?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
-                                                <td><?= $nama; ?></td>
-                                                <td><?= $level; ?></td>
+                                                <td><?= $nama_lengkap; ?></td>
+                                                <td><?= $jabatan; ?></td>
+                                                <td><?= $unit_kerja; ?></td>
                                                 <td><?= $email; ?></td>
                                                 <td>
                                                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit<?= $id; ?>">
@@ -110,16 +114,22 @@ require 'function.php';
                                                     <div class="modal fade" id="edit<?= $id; ?>">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
-
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title">Update Data</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                </div>
                                                                 <!-- Modal body -->
                                                                 <form method="post">
                                                                     <div class="modal-body">
-                                                                        <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control" required value="<?= $nama ?>">
-                                                                        <input type="hidden" name="id_user" placeholder="Nama Lengkap" class="form-control" required value="<?= $id ?>">
+                                                                        <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" class="form-control" required value="<?= $nama_lengkap ?>">
+                                                                        <br>
+                                                                        <input type="text" name="jabatan" placeholder="jabatan" class="form-control" required value="<?= $jabatan ?>">
+                                                                        <br>
+                                                                        <input type="text" name="unit_kerja" placeholder="Unit Kerja" class="form-control" required value="<?= $unit_kerja ?>">
                                                                         <br>
                                                                         <input type="text" name="email" placeholder="Email" class="form-control" required value="<?= $email ?>">
                                                                         <br>
-                                                                        <input type="password" name="password" placeholder="password" class="form-control">
+                                                                        <input type="password" name="password" placeholder="password" class="form-control" required value="<?= $password ?>">
                                                                         <br>
                                                                         <button type="submit" class="btn btn-primary" name="updateUser">Submit</button>
                                                                     </div>
@@ -193,7 +203,11 @@ require 'function.php';
             <!-- Modal body -->
             <form method="post">
                 <div class="modal-body">
-                    <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control" required>
+                    <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" class="form-control" required>
+                    <br>
+                    <input type="text" name="jabatan" placeholder="jabatan" class="form-control" required>
+                    <br>
+                    <input type="text" name="unit_kerja" placeholder="Unit Kerja" class="form-control" required>
                     <br>
                     <input type="text" name="email" placeholder="Email" class="form-control" required>
                     <br>

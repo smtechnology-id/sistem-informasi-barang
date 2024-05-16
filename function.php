@@ -312,12 +312,14 @@ if (isset($_POST['deleteFurniture'])) {
 }
 if (isset($_POST['addUser'])) {
     // Ambil data dari form
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $nama_lengkap = mysqli_real_escape_string($conn, $_POST['nama_lengkap']);
+    $jabatan = mysqli_real_escape_string($conn, $_POST['jabatan']);
+    $unit_kerja = mysqli_real_escape_string($conn, $_POST['unit_kerja']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
     // Query untuk menyimpan data
-    $sql = "INSERT INTO login (nama, email, password, level) VALUES ('$nama', '$email', '$password', 'admin')";
+    $sql = "INSERT INTO users (nama_lengkap,jabatan,unit_kerja,email, password) VALUES ('$nama_lengkap','$jabatan','$unit_kerja', '$email', '$password')";
 
     // Eksekusi query
     if (mysqli_query($conn, $sql)) {

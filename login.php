@@ -8,7 +8,7 @@ if(isset($_POST['login'])){
     $password = $_POST['password'];
 
     //cocokin database
-    $cekdatabase = mysqli_query($conn, "SELECT * FROM login where email='$email' and password='$password'");
+    $cekdatabase = mysqli_query($conn, "SELECT * FROM users where email='$email' and password='$password'");
     //hitung data
     $fetch = mysqli_fetch_array($cekdatabase);
     $hitung = mysqli_num_rows($cekdatabase);

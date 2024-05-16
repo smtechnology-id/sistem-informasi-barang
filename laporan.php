@@ -1,6 +1,5 @@
 <?php
 require 'function.php';
-session_start();
 if (!isset($_SESSION['log'])) {
     header('location:login.php');
 }
@@ -70,79 +69,107 @@ if (!isset($_SESSION['log'])) {
                         <div class="card-header">
                         </div>
                         <div class="card-body">
-                        <a href="javascript:window.print()" class="btn btn-primary"><i class="ri-printer-line"></i> Print</a>
+                            <a href="javascript:window.print()" class="btn btn-primary"><i class="ri-printer-line"></i> Print</a>
+                            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#filter">
+                                Filter
+                            </button>
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Barang</th>
+                                        <th>Jumlah Barang</th>
+                                        <th>Nama Barang</th>
+                                        <th>Nomor Register</th>
+                                        <th>Kondisi</th>
+                                        <th>Merk</th>
+                                        <th>Ukuran</th>
+                                        <th>Bahan</th>
+                                        <th>Tahun Perolehan</th>
+                                        <th>Asal Usul</th>
+                                        <th>Harga</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Kode Barang</th>
-                                            <th>Jumlah Barang</th>
-                                            <th>Nama Barang</th>
-                                            <th>Nomor Register</th>
-                                            <th>Kondisi</th>
-                                            <th>Merk</th>
-                                            <th>Ukuran</th>
-                                            <th>Bahan</th>
-                                            <th>Tahun Perolehan</th>
-                                            <th>Asal Usul</th>
-                                            <th>Harga</th>
-                                            <th>Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    <?php
+                                    if (isset($_POST['filterlaporan'])) {
+                                        // Ambil dan sanitasi data dari form
+                                        $namainvenbarang = isset($_POST['namainvenbarang']) ? mysqli_real_escape_string($conn, $_POST['namainvenbarang']) : '';
+                                        $kondisibarang = isset($_POST['kondisibarang']) ? mysqli_real_escape_string($conn, $_POST['kondisibarang']) : '';
 
-                                        <?php
-                                        // Query untuk mengambil jumlah barang dengan kode yang sama
-                                        $query = "SELECT *, COUNT(*) AS jumlah_barang FROM barang GROUP BY kodebarang, namainvenbarang";
-                                        $ambilsemuadatabarang = mysqli_query($conn, $query);
+                                        // Membuat query dengan kondisi filter
+                                        $query = "SELECT *, COUNT(*) AS jumlah_barang FROM barang";
 
-                                        $i = 1;
-                                        while ($data = mysqli_fetch_array($ambilsemuadatabarang)) {
-                                            $kodebarang = $data['kodebarang'];
-                                            $namainvenbarang = $data['namainvenbarang'];
-                                            $nomorregister = $data['nomorregister'];
-                                            $kondisibarang = $data['kondisibarang'];
-                                            $merkbarang = $data['merkbarang'];
-                                            $ukuranbarang = $data['ukuranbarang'];
-                                            $bahanbarang = $data['bahanbarang'];
-                                            $tahunperolehanbarang = $data['tahunperolehanbarang'];
-                                            $asalusulbarang = $data['asalusulbarang'];
-                                            $hargabarang = $data['hargabarang'];
-                                            $keteranganbarang = $data['keteranganbarang'];
-                                            $jumlah_barang = $data['jumlah_barang'];
-                                            $queryNomorReg = mysqli_query($conn, "SELECT nomorregister FROM barang WHERE kodebarang = '$kodebarang'");
-                                            $nomorregister_list = [];
-                                            while ($fetchNomorReg = mysqli_fetch_array($queryNomorReg)) {
-                                                $nomorregister_list[] = $fetchNomorReg['nomorregister'];
-                                            }
-                                            $nomorregister_str = implode("<br> ", $nomorregister_list);
-                                            // Tampilkan data dalam tabel
-                                        ?>
-                                            <tr>
-                                                <td><?= $i++; ?></td>
-                                                <td><?= $kodebarang; ?></td>
-                                                <td><?= $jumlah_barang; ?></td>
-                                                <td><?= $namainvenbarang; ?></td>
-                                                <td><?= $nomorregister_str; ?></td>
-                                                <td><?= $kondisibarang; ?></td>
-                                                <td><?= $merkbarang; ?></td>
-                                                <td><?= $ukuranbarang; ?></td>
-                                                <td><?= $bahanbarang; ?></td>
-                                                <td><?= $tahunperolehanbarang; ?></td>
-                                                <td><?= $asalusulbarang; ?></td>
-                                                <td><?= $hargabarang; ?></td>
-                                                <td><?= $keteranganbarang; ?></td>
-                                            </tr>
-                                        <?php
+                                        // Tambahkan klausa WHERE jika ada kondisi filter yang diberikan
+                                        $whereClause = []; // Inisialisasi array untuk menyimpan kondisi WHERE
+                                        if (!empty($namainvenbarang)) {
+                                            $whereClause[] = "namainvenbarang = '$namainvenbarang'";
                                         }
-                                        ?>
+                                        if (!empty($kondisibarang)) {
+                                            $whereClause[] = "kondisibarang = '$kondisibarang'";
+                                        }
+                                        // Gabungkan kondisi WHERE ke dalam query jika ada
+                                        if (!empty($whereClause)) {
+                                            $query .= " WHERE " . implode(" AND ", $whereClause);
+                                        }
+
+                                        // Group by kodebarang dan namainvenbarang
+                                        $query .= " GROUP BY kodebarang, namainvenbarang";
+                                    } else {
+                                        // Jika tombol filterlaporan tidak ditekan, ambil semua data barang
+                                        $query = "SELECT *, COUNT(*) AS jumlah_barang FROM barang GROUP BY kodebarang, namainvenbarang";
+                                    }
+
+                                    // Eksekusi query
+                                    $ambilsemuadatabarang = mysqli_query($conn, $query);
 
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                    $i = 1;
+                                    while ($data = mysqli_fetch_array($ambilsemuadatabarang)) {
+                                        $kodebarang = $data['kodebarang'];
+                                        $namainvenbarang = $data['namainvenbarang'];
+                                        $nomorregister = $data['nomorregister'];
+                                        $kondisibarang = $data['kondisibarang'];
+                                        $merkbarang = $data['merkbarang'];
+                                        $ukuranbarang = $data['ukuranbarang'];
+                                        $bahanbarang = $data['bahanbarang'];
+                                        $tahunperolehanbarang = $data['tahunperolehanbarang'];
+                                        $asalusulbarang = $data['asalusulbarang'];
+                                        $hargabarang = $data['hargabarang'];
+                                        $keteranganbarang = $data['keteranganbarang'];
+                                        $jumlah_barang = $data['jumlah_barang'];
+                                        $queryNomorReg = mysqli_query($conn, "SELECT nomorregister FROM barang WHERE kodebarang = '$kodebarang'");
+                                        $nomorregister_list = [];
+                                        while ($fetchNomorReg = mysqli_fetch_array($queryNomorReg)) {
+                                            $nomorregister_list[] = $fetchNomorReg['nomorregister'];
+                                        }
+                                        $nomorregister_str = implode("<br> ", $nomorregister_list);
+                                        // Tampilkan data dalam tabel
+                                    ?>
+                                        <tr>
+                                            <td><?= $i++; ?></td>
+                                            <td><?= $kodebarang; ?></td>
+                                            <td><?= $jumlah_barang; ?></td>
+                                            <td><?= $namainvenbarang; ?></td>
+                                            <td><?= $nomorregister_str; ?></td>
+                                            <td><?= $kondisibarang; ?></td>
+                                            <td><?= $merkbarang; ?></td>
+                                            <td><?= $ukuranbarang; ?></td>
+                                            <td><?= $bahanbarang; ?></td>
+                                            <td><?= $tahunperolehanbarang; ?></td>
+                                            <td><?= $asalusulbarang; ?></td>
+                                            <td><?= $hargabarang; ?></td>
+                                            <td><?= $keteranganbarang; ?></td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -205,7 +232,31 @@ if (!isset($_SESSION['log'])) {
                     <br>
                     <button type="submit" class="btn btn-primary" name="addnewdata">Submit</button>
                 </div>
-                <form>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="filter">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Filter Data</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <form method="post">
+                <div class="modal-body">
+                    <input type="text" name="namainvenbarang" placeholder="Nama Barang" class="form-control">
+                    <br>
+                    <input type="text" name="kondisibarang" placeholder="Kondisi" class="form-control">
+                    <br>
+                    <button type="submit" class="btn btn-primary" name="filterlaporan">Submit</button>
+                </div>
+            </form>
 
         </div>
     </div>

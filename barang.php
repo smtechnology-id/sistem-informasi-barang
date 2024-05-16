@@ -76,8 +76,7 @@ require 'function.php';
 
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -99,11 +98,19 @@ require 'function.php';
                                         <?php
                                         if (isset($_POST['filterbarang'])) {
                                             // Ambil dan sanitasi data dari form
-                                            $namainvenbarang = mysqli_real_escape_string($conn, $_POST['namainvenbarang']);
-                                            $kondisibarang = mysqli_real_escape_string($conn, $_POST['kondisibarang']);
+                                            $namainvenbarang = isset($_POST['namainvenbarang']) ? mysqli_real_escape_string($conn, $_POST['namainvenbarang']) : '';
+                                            $kondisibarang = isset($_POST['kondisibarang']) ? mysqli_real_escape_string($conn, $_POST['kondisibarang']) : '';
                                         
                                             // Membuat query dengan kondisi filter
-                                            $query = "SELECT * FROM barang WHERE namainvenbarang = '$namainvenbarang' AND kondisibarang = '$kondisibarang'";
+                                            $query = "SELECT * FROM barang WHERE 1=1"; // Mulai dengan kondisi yang selalu benar
+                                        
+                                            // Tambahkan kondisi filter jika ada
+                                            if (!empty($namainvenbarang)) {
+                                                $query .= " AND namainvenbarang = '$namainvenbarang'";
+                                            }
+                                            if (!empty($kondisibarang)) {
+                                                $query .= " AND kondisibarang = '$kondisibarang'";
+                                            }
                                         } else {
                                             // Jika tombol filterbarang tidak ditekan, ambil semua data barang
                                             $query = "SELECT * FROM barang";
@@ -155,7 +162,6 @@ require 'function.php';
 
                                     </tbody>
                                 </table>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -198,9 +204,9 @@ require 'function.php';
             <!-- Modal body -->
             <form method="post" action="">
                 <div class="modal-body">
-                    <input type="text" name="namainvenbarang" placeholder="Nama Barang" class="form-control" required>
+                    <input type="text" name="namainvenbarang" placeholder="Nama Barang" class="form-control">
                     <br>
-                    <input type="text" name="kondisibarang" placeholder="Kondisi" class="form-control" required>
+                    <input type="text" name="kondisibarang" placeholder="Kondisi" class="form-control">
                     <br>
                     <button type="submit" class="btn btn-primary" name="filterbarang">Submit</button>
                 </div>
